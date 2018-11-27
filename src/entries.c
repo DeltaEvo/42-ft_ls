@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 12:05:26 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/11/23 17:10:55 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/11/27 12:47:15 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,20 @@
 #include <dirent.h>
 #include <pwd.h>
 #include <grp.h>
+#include <errno.h>
+#include <string.h>
+#include <unistd.h>
 
 char *path_join(char *path, size_t path_len, char *name, size_t name_len)
 {
-    char    *str;
+	char    *str;
 
-    str = malloc(path_len + name_len + 2);
-    ft_memcpy(str, path, path_len);
-    str[path_len] = '/';
-    ft_memcpy(str + path_len + 1, name, name_len);
-    str[path_len + name_len + 1] = 0;
-    return (str);
+	str = malloc(path_len + name_len + 2);
+	ft_memcpy(str, path, path_len);
+	str[path_len] = '/';
+	ft_memcpy(str + path_len + 1, name, name_len);
+	str[path_len + name_len + 1] = 0;
+	return (str);
 }
 
 t_entries	*create_list(size_t capacity) {
@@ -35,7 +38,7 @@ t_entries	*create_list(size_t capacity) {
 	list = malloc(sizeof(t_entries) + capacity * sizeof(t_entry));
 	*list = (t_entries) {
 		.capacity = capacity,
-		.len = 0
+			.len = 0
 	};
 
 	return (list);
@@ -54,6 +57,8 @@ void	destroy_list(t_entries *list)
 		free(ent->path);
 		free(ent->user);
 		free(ent->group);
+		if (ent->type == DT_LNK)
+			free(ent->link);
 		i++;
 	}
 	free(list);
@@ -124,11 +129,13 @@ uint8_t	mode_to_type(mode_t mode)
 		return (DT_UNKNOWN);
 }
 
-bool collect_long(t_entry *entry, t_max_sizes *sizes)
+bool collect_long(t_entry *entry, t_max *sizes)
 {
 	struct stat		f_stat;
 	struct passwd	*pwd;
 	struct group	*grp;
+	char			link[1024];
+	ssize_t			ret;
 
 	if (lstat(entry->path, &f_stat) == -1)
 	{
@@ -138,6 +145,13 @@ bool collect_long(t_entry *entry, t_max_sizes *sizes)
 	sizes->blocks += f_stat.st_blocks;
 	if (entry->type == DT_UNKNOWN)
 		entry->type = mode_to_type(f_stat.st_mode);
+	if (entry->type == DT_LNK)
+	{
+		// TODO: error
+		ret = readlink(entry->path, link, sizeof(link) - 1);
+		link[ret] = 0;
+		entry->link = strdup(link);
+	}
 	entry->mode = f_stat.st_mode;
 	entry->nlink = f_stat.st_nlink;
 	entry->nlink_len = nb_len(entry->nlink);
@@ -159,32 +173,63 @@ bool collect_long(t_entry *entry, t_max_sizes *sizes)
 	return (true);
 }
 
-t_entries	*collect_entries(char *r_path, size_t r_path_len, DIR* dir, t_flags *flags, t_max_sizes *sizes) {
+int		entry_name_cmp(t_entry *e1, t_entry *e2)
+{
+	return (strcmp(e1->name, e2->name));
+}
+
+void	sort_entries(t_entries *tab, int (*cmp)(t_entry *e1, t_entry *e2))
+{
+	int i;
+	int j;
+	t_entry tmp;
+
+	if (tab->len < 2)
+		return ;
+	i = tab->len;
+	while (--i)
+	{
+		j = -1;
+		while (++j < i)
+			if (cmp(tab->entries + j + 1, tab->entries + j) < 0)
+			{
+				tmp = tab->entries[j + 1];
+				tab->entries[j + 1] = tab->entries[j];
+				tab->entries[j] = tmp;
+			}
+	}
+}
+
+t_entries	*collect_entries(char *r_path, size_t r_path_len, t_flags *flags, t_max *sizes) {
+	DIR *const		dir = opendir(r_path);
 	struct dirent	*d_entry;
 	t_entry			*entry;
 	t_entries		*list;
 	char			*path;
-	
-	list = create_list(10);
+
+	if (!dir || !(list = create_list(10)))
+		return (NULL);
 	while ((d_entry = readdir(dir))) {
 		if (flags->show_hidden || d_entry->d_name[0] != '.') {
 			entry = add_entry(&list);
 			path = path_join(r_path, r_path_len, d_entry->d_name, d_entry->d_namlen);
 			*entry = (t_entry) {
 				.path = path,
-				.path_len = r_path_len + d_entry->d_namlen + 1,
-				.name = path + r_path_len + 1,
-				.type = d_entry->d_type
+					.path_len = r_path_len + d_entry->d_namlen + 1,
+					.name = path + r_path_len + 1,
+					.type = d_entry->d_type
 			};
 			if (d_entry->d_namlen > sizes->name)
 				sizes->name = d_entry->d_namlen;
 			if (flags->long_format || entry->type == DT_UNKNOWN)
 				if (!collect_long(entry, sizes))
 				{
+					closedir(dir);
 					destroy_list(list);
 					return (NULL);
 				}
 		}
 	}
+	closedir(dir);
 	return (list);
 }
