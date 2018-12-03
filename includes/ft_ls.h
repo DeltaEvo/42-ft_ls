@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 10:03:38 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/11/29 15:01:18 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/11/30 14:27:07 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,7 @@ size_t			nb_len(uint64_t n);
 char			*ft_itoal(int64_t nb, size_t *len);
 char			*ft_strdupl(const char *src, size_t *len);
 int				ls(t_flags *flags, char *path, size_t path_len);
+bool			collect_infos(uint16_t n, t_entry *e, t_flags *f, t_max *s);
+uint8_t			mode_to_type(mode_t mode);
 
 #endif

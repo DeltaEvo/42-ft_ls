@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 09:49:06 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/11/29 13:10:14 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/11/30 16:52:47 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	print_entry(t_flags *flags, t_entries *list, t_max *sizes)
 	}
 }
 
-int		recursive_ls(t_flags *f, t_entries *l)
+int		recursive_ls(t_flags *f, t_entries *l, bool first_nl)
 {
 	size_t		i;
 	int			ret;
@@ -58,7 +58,9 @@ int		recursive_ls(t_flags *f, t_entries *l)
 	{
 		if (l->entries[i].type == DT_DIR && !is_special(l->entries[i].name))
 		{
-			ft_putf("\n%s:\n", l->entries[i].path);
+			if (first_nl)
+				ft_putf("\n");
+			ft_putf("%s:\n", l->entries[i].path);
 			ret |= ls(f, l->entries[i].path, l->entries[i].path_len);
 		}
 		i++;
@@ -79,24 +81,36 @@ int		ls(t_flags *flags, char *path, size_t path_len)
 	sort_entries(list, entry_name_cmp, flags->reverse);
 	(flags->long_format ? print_entry_long : print_entry)(flags, list, &sizes);
 	if (flags->recursive)
-		ret = recursive_ls(flags, list);
+		ret = recursive_ls(flags, list, true);
 	destroy_list(list);
 	return (ret);
 }
 
-int		multiple_files(t_flags *flags, char **files, int size)
+int		handle_args(t_flags *f, char **args, int size, int i)
 {
-	int			ret;
-	size_t		len;
+	t_entries *const	files = create_list(10);
+	t_entries *const	dirs = create_list(10);
+	t_entry				*e;
+	struct stat			f_stat;
+	t_max				f_sizes;
 
-	ret = 0;
-	while (size--)
+	f_sizes = (t_max) {0, 0, 0, 0, 0, 0, 0};
+	while (i < size)
 	{
-		len = ft_strlen(*files);
-		ret |= ls(flags, *files, len - ((*files)[len - 1] == '/'));
-		files++;
+		stat(args[i], &f_stat);
+		e = add_entry((t_entries **)(S_ISDIR(f_stat.st_mode) ? &dirs : &files));
+		*e = (t_entry) { .path = args[i], .name = args[i],
+		.path_len = ft_strlen(args[i]), .type = mode_to_type(f_stat.st_mode)};
+		collect_infos(e->path_len, e, f, &f_sizes);
+		i++;
 	}
-	return (ret);
+	sort_entries(files, entry_name_cmp, f->reverse);
+	sort_entries(dirs, entry_name_cmp, f->reverse);
+	if (files->len)
+		(f->long_format ? print_entry_long : print_entry)(f, files, &f_sizes);
+	if (dirs->len > 1)
+		return (recursive_ls(f, dirs, files->len));
+	return (ls(f, dirs->entries->path, dirs->entries->path_len));
 }
 
 int		main(int argc, char **argv)
@@ -122,7 +136,7 @@ int		main(int argc, char **argv)
 	}
 	argc -= g_ft_optind;
 	argv += g_ft_optind;
-	if (argc > 0)
-		return (multiple_files(&flags, argv, argc));
+	if (argc)
+		return (handle_args(&flags, argv, argc, 0));
 	return (ls(&flags, ".", 1));
 }
