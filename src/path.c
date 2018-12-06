@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/29 10:21:33 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/11/29 10:30:31 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/06 12:48:07 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 bool		is_special(char *name)
 {
-	return (ft_strequ(".", name) || ft_strequ("..", name));
+	return (ft_strcmp(".", name) == 0 || ft_strcmp("..", name) == 0);
 }
 
 char		*path_join(char *path, size_t path_len, char *name, size_t name_len)

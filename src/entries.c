@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 12:05:26 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/11/29 15:00:59 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/06 12:47:45 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_entry		*add_entry(t_entries **list)
 
 int			entry_name_cmp(t_entry *e1, t_entry *e2)
 {
-	return (strcmp(e1->name, e2->name));
+	return (ft_strcmp(e1->name, e2->name));
 }
 
 void		sort_entries(t_entries *tab, int (*cmp)(), bool rev)

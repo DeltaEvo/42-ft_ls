@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 10:03:38 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/11/30 14:27:07 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/06 13:10:52 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void			*ft_realloc(void *o_ptr, size_t oldsize, size_t newsize);
 char			*path_join(char *path, size_t plen, char *n, size_t nlen);
 void			pad(size_t size);
 bool			is_special(char *name);
-void			print_entry_long(t_flags *flags, t_entries *list, t_max *sizes);
+void			print_entry_long(t_flags *flags, t_entries *list, t_max *sizes, bool in_dir);
 void			print_name(t_entry *e, bool color);
 t_entry			*add_entry(t_entries **list);
 t_entries		*create_list(size_t capacity);

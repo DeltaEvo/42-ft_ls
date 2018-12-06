@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/28 10:10:19 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/11/29 15:06:48 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/06 13:11:22 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	print_name(t_entry *e, bool color)
 	if (color && g_colors[e->type] != 90)
 		ft_putf("\x1b[%dm%s\x1b[0m", g_colors[e->type], e->name);
 	else
-		ft_putstr(e->name);
+		ft_putf("%s", e->name);
 }
 
 void	print_rwx(mode_t m, char s, bool color)
@@ -117,12 +117,12 @@ void	print_infos(t_entry *e, t_flags *flags, t_max *sizes)
 	ft_putf("\n");
 }
 
-void	print_entry_long(t_flags *flags, t_entries *list, t_max *sizes)
+void	print_entry_long(t_flags *flags, t_entries *list, t_max *sizes, bool d)
 {
 	size_t	i;
 
 	i = 0;
-	if (list->len)
+	if (d && list->len)
 		ft_putf("total %d\n", sizes->blocks);
 	while (i < list->len)
 		print_infos(list->entries + i++, flags, sizes);

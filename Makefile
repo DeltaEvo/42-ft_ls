@@ -6,12 +6,12 @@
 #    By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/06 16:01:17 by dde-jesu          #+#    #+#              #
-#    Updated: 2018/12/06 09:48:47 by dde-jesu         ###   ########.fr        #
+#    Updated: 2018/12/06 12:41:30 by dde-jesu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME=ft_ls
-CFLAGS=-Wall -Werror -Wextra -Iincludes -Ilibft
+CFLAGS=-Wall -Werror -Wextra -Iincludes -Ilibft/include
 CC=gcc
 
 include src.mk
