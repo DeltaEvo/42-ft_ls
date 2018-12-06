@@ -6,7 +6,7 @@
 #    By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/06 16:01:17 by dde-jesu          #+#    #+#              #
-#    Updated: 2018/11/29 13:17:04 by dde-jesu         ###   ########.fr        #
+#    Updated: 2018/12/06 09:48:47 by dde-jesu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,15 +22,16 @@ all: $(NAME)
 
 $(OBJS): Makefile src.mk includes/ft_ls.h
 
-libft/libft.a:
-	make -C libft libft.a
-
-$(NAME): $(OBJS) libft/libft.a
+$(NAME): $(OBJS)
+	$(MAKE) -C libft libft.a
 	$(CC) -o $(NAME) $(OBJS) libft/libft.a
+
 clean:
+	$(MAKE) -C libft clean
 	rm -f $(OBJS)
 
 fclean: clean
+	$(MAKE) -C libft fclean
 	rm -rf $(NAME)
 
 re: fclean $(NAME)
