@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 09:49:06 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/06 13:11:49 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/06 13:39:30 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	print_entry(t_flags *flags, t_entries *list, t_max *sizes, bool d)
 
 	(void)d;
 	columns = get_columns() / (sizes->name + 1);
+	columns = columns ? columns : 1;
 	lines = list->len / columns + !!(list->len % columns);
 	i = 0;
 	while (i < lines * columns)
@@ -102,7 +103,7 @@ int		handle_args(t_flags *f, char **args, int size, int i)
 
 	f_size = (t_max) {0, 0, 0, 0, 0, 0, 0};
 	while (i < size)
-		if (stat(args[i], &f_s) == -1)
+		if (lstat(args[i], &f_s) == -1)
 			ft_putf_fd(2, "%s: %s: %s\n", f->name, args[i++], strerror(errno));
 		else
 		{

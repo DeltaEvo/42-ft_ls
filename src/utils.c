@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/28 10:11:35 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/11/29 10:33:14 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/06 13:35:44 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ uint16_t	get_columns(void)
 {
 	struct winsize	w;
 
-	ioctl(0, TIOCGWINSZ, &w);
+	if (ioctl(0, TIOCGWINSZ, &w) == -1)
+		return (0);
 	return (w.ws_col);
 }

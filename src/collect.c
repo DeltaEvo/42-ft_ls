@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/28 10:13:19 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/11/30 14:27:00 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/06 13:19:09 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ bool		collect_long(t_entry *entry, t_max *sizes, struct stat *f_stat)
 		if ((ret = readlink(entry->path, link, sizeof(link) - 1)) == -1)
 			return (false);
 		link[ret] = 0;
-		entry->link = strdup(link);
+		entry->link = ft_strdup(link);
 	}
 	else if (entry->type == DT_BLK || entry->type == DT_CHR)
 	{
