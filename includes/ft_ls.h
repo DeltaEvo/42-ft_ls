@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 10:03:38 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/06 13:10:52 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/06 17:27:19 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ typedef	struct	s_flags {
 	bool	recursive;
 	bool	show_hidden;
 	bool	reverse;
-	bool	sort_by_time;
+	int		(*sort)(t_entry *e1, t_entry *e2);
 	bool	color;
+
 }				t_flags;
 
 typedef	struct	s_max {
@@ -71,6 +72,7 @@ t_entries		*destroy_list(t_entries *list);
 void			sort_entries(t_entries *tab, int (*cmp)(), bool rev);
 t_entries		*collect_entries(char *p, size_t r_p, t_flags *f, t_max *s);
 int				entry_name_cmp(t_entry *e1, t_entry *e2);
+int				entry_time_cmp(t_entry *e1, t_entry *e2);
 void			*ft_realloc(void *o_ptr, size_t oldsize, size_t newsize);
 char			*path_join(char *path, size_t plen, char *n, size_t nlen);
 void			pad(size_t size);

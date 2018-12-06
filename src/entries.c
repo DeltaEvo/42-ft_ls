@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 12:05:26 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/06 12:47:45 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/06 17:35:17 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_entries	*create_list(size_t capacity)
 	list = malloc(sizeof(t_entries) + capacity * sizeof(t_entry));
 	*list = (t_entries) {
 		.capacity = capacity,
-			.len = 0
+		.len = 0
 	};
 	return (list);
 }
@@ -60,11 +60,6 @@ t_entry		*add_entry(t_entries **list)
 		(*list)->capacity = new_capacity;
 	}
 	return (*list)->entries + (*list)->len++;
-}
-
-int			entry_name_cmp(t_entry *e1, t_entry *e2)
-{
-	return (ft_strcmp(e1->name, e2->name));
 }
 
 void		sort_entries(t_entries *tab, int (*cmp)(), bool rev)
