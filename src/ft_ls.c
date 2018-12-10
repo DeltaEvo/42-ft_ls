@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 09:49:06 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/10 14:59:51 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/10 15:14:28 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int		ls(t_flags *f, char *path, size_t path_len)
 	(f->long_format ? print_entry_long : print_entry)(f, list, &sizes, 1);
 	if (f->recursive)
 		ret = recursive_ls(f, list, true);
-	destroy_list(list);
+	destroy_list(list, true);
 	return (ret);
 }
 
@@ -115,9 +115,9 @@ int		handle_args(t_flags *f, char **args, int size, int i)
 	sort_entries(dir, f->sort, f->reverse);
 	if (file->len)
 		(f->long_format ? print_entry_long : print_entry)(f, file, &f_size, 0);
-	if (dir->len > 1 || (dir->len == 1 && file->len))
-		return (recursive_ls(f, dir, file->len));
-	return (ls(f, dir->entries->path, dir->entries->path_len));
+	i = (dir->len > 1 || (dir->len == 1 && file->len) ? recursive_ls(f,
+		dir, file->len) : ls(f, dir->entries->path, dir->entries->path_len));
+	return (destroy_list(dir, destroy_list(file, false)) ? i : i);
 }
 
 int		main(int argc, char *argv[])

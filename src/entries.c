@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 12:05:26 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/07 16:28:07 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/10 15:07:48 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_entries	*create_list(size_t capacity)
 	return (list);
 }
 
-t_entries	*destroy_list(t_entries *list)
+t_entries	*destroy_list(t_entries *list, bool free_path)
 {
 	size_t	i;
 	t_entry	*ent;
@@ -37,7 +37,8 @@ t_entries	*destroy_list(t_entries *list)
 	while (i < list->len)
 	{
 		ent = list->entries + i;
-		free(ent->path);
+		if (free_path)
+			free(ent->path);
 		free(ent->user);
 		free(ent->group);
 		if (ent->type == DT_LNK)

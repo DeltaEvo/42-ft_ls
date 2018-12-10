@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/28 10:13:19 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/10 15:01:36 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/10 15:08:23 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ t_entries	*collect_entries(char *r_path, size_t r_path_len, t_flags *flags,
 		{
 			ft_putf_fd(2, "%s: %s: %s\n", flags->name, path, strerror(errno));
 			closedir(dir);
-			return (destroy_list(list));
+			return (destroy_list(list, true));
 		}
 	}
 	closedir(dir);

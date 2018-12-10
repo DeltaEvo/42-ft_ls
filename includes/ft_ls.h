@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 10:03:38 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/10 14:57:48 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/10 15:08:12 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef	struct	s_max {
 	size_t	blocks;
 }				t_max;
 
-t_entries		*destroy_list(t_entries *list);
+t_entries		*destroy_list(t_entries *list, bool destroy_path);
 void			sort_entries(t_entries *tab, int (*cmp)(), bool rev);
 t_entries		*collect_entries(char *p, size_t r_p, t_flags *f, t_max *s);
 int				entry_name_cmp(t_entry *e1, t_entry *e2);
