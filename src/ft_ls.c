@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 09:49:06 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/06 17:31:16 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/10 14:59:51 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int		handle_args(t_flags *f, char **args, int size, int i)
 
 	f_size = (t_max) {0, 0, 0, 0, 0, 0, 0};
 	while (++i < size)
-		if (lstat(args[i], &f_s) == -1)
+		if ((f->follow ? stat : lstat)(args[i], &f_s) == -1)
 			ft_putf_fd(2, "%s: %s: %s\n", f->name, args[i], strerror(errno));
 		else
 		{
@@ -123,27 +123,28 @@ int		handle_args(t_flags *f, char **args, int size, int i)
 int		main(int argc, char *argv[])
 {
 	t_flags		flags;
-	t_arg		*args;
-	int			ret;
 	bool		sort_by_time;
-
-	sort_by_time = 0;
-	flags = (t_flags) {argv[0], 0, 0, 0, 0, 0, isatty(1)};
-	args = (t_arg[]) {
+	int			ret;
+	const t_arg	args[] = {
 		{ ARG_BOOLEAN, 'l', "long", &flags.long_format, NULL },
 		{ ARG_BOOLEAN, 'R', "recursive", &flags.recursive, NULL },
 		{ ARG_BOOLEAN, 'a', "all", &flags.show_hidden, NULL },
 		{ ARG_BOOLEAN, 'r', "reverse", &flags.reverse, NULL },
 		{ ARG_BOOLEAN, 't', "time", &sort_by_time, NULL },
 		{ ARG_BOOLEAN, 'G', "color", &flags.color, NULL },
+		{ ARG_BOOLEAN, 'n', "numeric-uid-gid", &flags.uid, NULL },
+		{ ARG_BOOLEAN, 'H', "follow-links", &flags.follow, NULL },
+		{ ARG_BOOLEAN, 'u', "last-access", &flags.last_access, NULL },
+		{ ARG_BOOLEAN, 'U', "file-creation", &flags.file_creation, NULL },
 	};
+
+	sort_by_time = 0;
+	flags = (t_flags) {argv[0], 0, 0, 0, 0, 0, isatty(1), 0, 0, 0, 0};
 	if ((ret = parse_args(args, argc, argv)) < 0)
 		return (1);
 	flags.sort = sort_by_time ? entry_time_cmp : entry_name_cmp;
+	flags.follow |= !flags.long_format;
 	if (ret != argc)
-	{
-		ret = handle_args(&flags, argv + ret, argc - ret, -1);
-		return (errno ? 1 : ret);
-	}
+		return (handle_args(&flags, argv + ret, argc - ret, -1) ? 1 : !!errno);
 	return (ls(&flags, ".", 1));
 }

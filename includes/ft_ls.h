@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 10:03:38 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/06 17:27:19 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/10 14:57:48 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct	s_entry {
 	size_t	size_len;
 	uint8_t	major;
 	size_t	major_len;
-	time_t	mtime;
+	time_t	time;
 	char	*link;
 }				t_entry;
 
@@ -55,7 +55,10 @@ typedef	struct	s_flags {
 	bool	reverse;
 	int		(*sort)(t_entry *e1, t_entry *e2);
 	bool	color;
-
+	bool	uid;
+	bool	follow;
+	bool	last_access;
+	bool	file_creation;
 }				t_flags;
 
 typedef	struct	s_max {
@@ -77,7 +80,8 @@ void			*ft_realloc(void *o_ptr, size_t oldsize, size_t newsize);
 char			*path_join(char *path, size_t plen, char *n, size_t nlen);
 void			pad(size_t size);
 bool			is_special(char *name);
-void			print_entry_long(t_flags *flags, t_entries *list, t_max *sizes, bool in_dir);
+void			print_entry_long(t_flags *flags, t_entries *list, t_max *sizes,
+		bool in_dir);
 void			print_name(t_entry *e, bool color);
 t_entry			*add_entry(t_entries **list);
 t_entries		*create_list(size_t capacity);

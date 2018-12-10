@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/28 10:13:19 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/06 13:19:09 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/10 15:01:36 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ bool		collect_max(t_entry *entry, t_max *sizes)
 	return (true);
 }
 
-bool		collect_long(t_entry *entry, t_max *sizes, struct stat *f_stat)
+static bool	collect_long(t_entry *entry, t_max *sizes, struct stat *f_stat,
+		t_flags *f)
 {
 	const struct passwd	*pwd = getpwuid(f_stat->st_uid);
 	const struct group	*grp = getgrgid(f_stat->st_gid);
@@ -76,9 +77,9 @@ bool		collect_long(t_entry *entry, t_max *sizes, struct stat *f_stat)
 		entry->major_len = nb_len(entry->major);
 	}
 	entry->size_len = nb_len(entry->size);
-	entry->user = pwd ? ft_strdupl(pwd->pw_name, &entry->user_len)
+	entry->user = !f->uid && pwd ? ft_strdupl(pwd->pw_name, &entry->user_len)
 					: ft_itoal(f_stat->st_uid, &entry->user_len);
-	entry->group = grp ? ft_strdupl(grp->gr_name, &entry->group_len)
+	entry->group = !f->uid && grp ? ft_strdupl(grp->gr_name, &entry->group_len)
 					: ft_itoal(f_stat->st_gid, &entry->group_len);
 	return (collect_max(entry, sizes));
 }
@@ -97,7 +98,10 @@ bool		collect_infos(uint16_t namlen, t_entry *entry, t_flags *flags,
 	if (entry->type == DT_UNKNOWN)
 		entry->type = mode_to_type(f_stat.st_mode);
 	entry->mode = f_stat.st_mode;
-	entry->mtime = f_stat.st_mtime;
+	if (flags->last_access || flags->file_creation)
+		entry->time = flags->last_access ? f_stat.st_atime : f_stat.st_ctime;
+	else
+		entry->time = f_stat.st_mtime;
 	if (flags->long_format)
 	{
 		sizes->blocks += f_stat.st_blocks;
@@ -105,7 +109,7 @@ bool		collect_infos(uint16_t namlen, t_entry *entry, t_flags *flags,
 		entry->major_len = 0;
 		entry->nlink = f_stat.st_nlink;
 		entry->nlink_len = nb_len(entry->nlink);
-		return (collect_long(entry, sizes, &f_stat));
+		return (collect_long(entry, sizes, &f_stat, flags));
 	}
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/28 10:11:35 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/06 13:35:44 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/07 16:27:57 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,16 +66,6 @@ void		pad(size_t size)
 {
 	while (size--)
 		ft_putf(" ");
-}
-
-void		*ft_realloc(void *o_ptr, size_t oldsize, size_t newsize)
-{
-	void	*ptr;
-
-	ptr = malloc(newsize);
-	ft_memcpy(ptr, o_ptr, oldsize);
-	free(o_ptr);
-	return (ptr);
 }
 
 uint16_t	get_columns(void)

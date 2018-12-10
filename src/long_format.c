@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/28 10:10:19 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/06 13:11:22 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/10 14:55:56 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ void	print_size_and_date(t_entry *e, t_max *sizes)
 	pad(sizes->size - e->size_len);
 	ft_putf(" %d", e->size);
 	now = time(NULL);
-	diff = now > e->mtime ? now - e->mtime : e->mtime - now;
-	date = ctime(&e->mtime);
+	diff = now > e->time ? now - e->time : e->time - now;
+	date = ctime(&e->time);
 	date += 4;
 	if (diff > 3600 * 24 * 30.5 * 6)
 	{

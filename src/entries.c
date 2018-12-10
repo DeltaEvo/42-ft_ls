@@ -6,12 +6,13 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 12:05:26 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/06 17:35:17 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/07 16:28:07 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 #include "libft.h"
+#include "ft/mem.h"
 #include <stdlib.h>
 #include <dirent.h>
 
