@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 09:49:06 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/10 15:14:28 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/11 15:35:41 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ int		main(int argc, char *argv[])
 		{ ARG_BOOLEAN, 'H', "follow-links", &flags.follow, NULL },
 		{ ARG_BOOLEAN, 'u', "last-access", &flags.last_access, NULL },
 		{ ARG_BOOLEAN, 'U', "file-creation", &flags.file_creation, NULL },
-	};
+		{ ARG_END, 0, 0, 0, 0 }};
 
 	sort_by_time = 0;
 	flags = (t_flags) {argv[0], 0, 0, 0, 0, 0, isatty(1), 0, 0, 0, 0};
