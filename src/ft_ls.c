@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 09:49:06 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/11 15:35:41 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/12 15:35:01 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,28 +120,30 @@ int		handle_args(t_flags *f, char **args, int size, int i)
 	return (destroy_list(dir, destroy_list(file, false)) ? i : i);
 }
 
+#define D "List information about the FILEs (the current directory by default)."
+
 int		main(int argc, char *argv[])
 {
 	t_flags		flags;
 	bool		sort_by_time;
 	int			ret;
 	const t_arg	args[] = {
-		{ ARG_BOOLEAN, 'l', "long", &flags.long_format, NULL },
-		{ ARG_BOOLEAN, 'R', "recursive", &flags.recursive, NULL },
-		{ ARG_BOOLEAN, 'a', "all", &flags.show_hidden, NULL },
-		{ ARG_BOOLEAN, 'r', "reverse", &flags.reverse, NULL },
-		{ ARG_BOOLEAN, 't', "time", &sort_by_time, NULL },
-		{ ARG_BOOLEAN, 'G', "color", &flags.color, NULL },
-		{ ARG_BOOLEAN, 'n', "numeric-uid-gid", &flags.uid, NULL },
-		{ ARG_BOOLEAN, 'H', "follow-links", &flags.follow, NULL },
-		{ ARG_BOOLEAN, 'u', "last-access", &flags.last_access, NULL },
-		{ ARG_BOOLEAN, 'U', "file-creation", &flags.file_creation, NULL },
+		{ ARG_BOOLEAN, 'l', "long", &flags.long_format, "use a long format" },
+		{ ARG_BOOLEAN, 'R', "recursive", &flags.recursive, "list subdirs" },
+		{ ARG_BOOLEAN, 'a', "all", &flags.show_hidden, "show hidden" },
+		{ ARG_BOOLEAN, 'r', "reverse", &flags.reverse, "reverse entries" },
+		{ ARG_BOOLEAN, 't', "time", &sort_by_time, "sort by time" },
+		{ ARG_BOOLEAN, 'G', "color", &flags.color, "force color" },
+		{ ARG_BOOLEAN, 'n', "numeric-uid-gid", &flags.uid, "show uid and gid" },
+		{ ARG_BOOLEAN, 'H', "follow-links", &flags.follow, "" },
+		{ ARG_BOOLEAN, 'u', "last-access", &flags.last_access, "" },
+		{ ARG_BOOLEAN, 'U', "file-creation", &flags.file_creation, "" },
 		{ ARG_END, 0, 0, 0, 0 }};
 
 	sort_by_time = 0;
 	flags = (t_flags) {argv[0], 0, 0, 0, 0, 0, isatty(1), 0, 0, 0, 0};
 	if ((ret = parse_args(args, argc, argv)) < 0)
-		return (1);
+		return (args_usage(args, argv[0], "[FILES]...", D) || 1);
 	flags.sort = sort_by_time ? entry_time_cmp : entry_name_cmp;
 	flags.follow |= !flags.long_format;
 	if (ret != argc)
