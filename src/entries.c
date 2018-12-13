@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 12:05:26 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/10 15:07:48 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/13 10:17:31 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void		sort_entries(t_entries *tab, int (*cmp)(), bool rev)
 		while (++j < i)
 		{
 			ret = cmp(tab->entries + j + 1, tab->entries + j);
-			if (rev ? ret > 0 : ret < 0)
+			if (rev ? ret >= 0 : ret < 0)
 			{
 				tmp = tab->entries[j + 1];
 				tab->entries[j + 1] = tab->entries[j];
