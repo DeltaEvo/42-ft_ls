@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 10:03:38 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/10 15:08:12 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/13 14:56:59 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ typedef struct	s_entry {
 	size_t	major_len;
 	time_t	time;
 	char	*link;
+	bool	has_xattr;
+	bool	has_acl;
 }				t_entry;
 
 typedef struct	s_entries {

@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/28 10:10:19 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/10 14:55:56 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/13 12:53:56 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,9 @@ void	print_infos(t_entry *e, t_flags *flags, t_max *sizes)
 	print_rwx(e->mode >> 6, e->mode & S_ISUID ? 's' : 0, flags->color);
 	print_rwx(e->mode >> 3, e->mode & S_ISGID ? 's' : 0, flags->color);
 	print_rwx(e->mode, e->mode & S_ISVTX ? 't' : 0, flags->color);
+	ft_putf("%c", " @+@"[e->has_xattr + (e->has_acl ? 2 : 0)]);
 	pad(sizes->nlink - e->nlink_len);
-	ft_putf("  %d %s", e->nlink, e->user);
+	ft_putf(" %d %s", e->nlink, e->user);
 	pad(sizes->user - e->user_len);
 	ft_putf("  %s", e->group);
 	pad(sizes->group - e->group_len + 1);

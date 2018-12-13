@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/28 10:13:19 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/10 15:08:23 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/13 14:59:41 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/xattr.h>
+#include <sys/types.h>
+#include <sys/acl.h>
 
-uint8_t		mode_to_type(mode_t mode)
+uint8_t			mode_to_type(mode_t mode)
 {
 	if (S_ISREG(mode))
 		return (DT_REG);
@@ -39,8 +42,20 @@ uint8_t		mode_to_type(mode_t mode)
 		return (DT_UNKNOWN);
 }
 
-bool		collect_max(t_entry *entry, t_max *sizes)
+static bool		collect_max(t_entry *entry, t_max *sizes)
 {
+	acl_t		acl;
+	acl_entry_t	dummy;
+
+	entry->has_xattr = listxattr(entry->path, NULL, 0, XATTR_NOFOLLOW) > 0;
+	acl = acl_get_link_np(entry->path, ACL_TYPE_EXTENDED);
+	if (acl && acl_get_entry(acl, ACL_FIRST_ENTRY, &dummy) == -1)
+	{
+		acl_free(acl);
+		acl = NULL;
+	}
+	entry->has_acl = !!acl;
+	acl_free(acl);
 	if (entry->user_len > sizes->user)
 		sizes->user = entry->user_len;
 	if (entry->group_len > sizes->group)
@@ -54,7 +69,7 @@ bool		collect_max(t_entry *entry, t_max *sizes)
 	return (true);
 }
 
-static bool	collect_long(t_entry *entry, t_max *sizes, struct stat *f_stat,
+static bool		collect_long(t_entry *entry, t_max *sizes, struct stat *f_stat,
 		t_flags *f)
 {
 	const struct passwd	*pwd = getpwuid(f_stat->st_uid);
@@ -84,7 +99,7 @@ static bool	collect_long(t_entry *entry, t_max *sizes, struct stat *f_stat,
 	return (collect_max(entry, sizes));
 }
 
-bool		collect_infos(uint16_t namlen, t_entry *entry, t_flags *flags,
+bool			collect_infos(uint16_t namlen, t_entry *entry, t_flags *flags,
 		t_max *sizes)
 {
 	struct stat		f_stat;
@@ -114,8 +129,8 @@ bool		collect_infos(uint16_t namlen, t_entry *entry, t_flags *flags,
 	return (true);
 }
 
-t_entries	*collect_entries(char *r_path, size_t r_path_len, t_flags *flags,
-		t_max *sizes)
+t_entries		*collect_entries(char *r_path, size_t r_path_len,
+		t_flags *flags, t_max *sizes)
 {
 	DIR *const		dir = opendir(r_path);
 	struct dirent	*d_ent;

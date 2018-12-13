@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 09:49:06 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/12 15:35:01 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/13 14:56:46 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include <string.h>
 #include <errno.h>
 
-void	print_entry(t_flags *flags, t_entries *list, t_max *sizes, bool d)
+static void	print_entry(t_flags *flags, t_entries *list, t_max *sizes, bool d)
 {
 	size_t			i;
 	size_t			j;
@@ -50,7 +50,7 @@ void	print_entry(t_flags *flags, t_entries *list, t_max *sizes, bool d)
 	}
 }
 
-int		recursive_ls(t_flags *f, t_entries *l, bool first_nl)
+static int	recursive_ls(t_flags *f, t_entries *l, bool first_nl)
 {
 	size_t		i;
 	int			ret;
@@ -73,7 +73,7 @@ int		recursive_ls(t_flags *f, t_entries *l, bool first_nl)
 	return (ret);
 }
 
-int		ls(t_flags *f, char *path, size_t path_len)
+int			ls(t_flags *f, char *path, size_t path_len)
 {
 	t_entries	*list;
 	t_max		sizes;
@@ -91,7 +91,7 @@ int		ls(t_flags *f, char *path, size_t path_len)
 	return (ret);
 }
 
-int		handle_args(t_flags *f, char **args, int size, int i)
+static int	handle_args(t_flags *f, char **args, int size, int i)
 {
 	t_entries *const	file = create_list(10);
 	t_entries *const	dir = create_list(10);
@@ -122,7 +122,7 @@ int		handle_args(t_flags *f, char **args, int size, int i)
 
 #define D "List information about the FILEs (the current directory by default)."
 
-int		main(int argc, char *argv[])
+int			main(int argc, char *argv[])
 {
 	t_flags		flags;
 	bool		sort_by_time;
